@@ -1,0 +1,3 @@
+pybluez
+python-daemon
+py4j
