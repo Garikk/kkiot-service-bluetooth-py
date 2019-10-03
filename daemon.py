@@ -13,7 +13,6 @@ class Daemon:
 
     def daemonize(self):
         """Deamonize class. UNIX double fork mechanism."""
-
         try:
             pid = os.fork()
             if pid > 0:
