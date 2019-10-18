@@ -4,7 +4,7 @@ import logging
 import logging.handlers
 from py4j.java_gateway import JavaGateway, CallbackServerParameters
 from daemon import Daemon
-from manager import javaConnector, javaCallback
+from manager import javaConnector
 
 logging.basicConfig(filename="pybt_plugin.txt", level=logging.DEBUG)
 logger = logging.getLogger('kkdev_plugin_pybt')
@@ -14,17 +14,15 @@ logger.addHandler(handler)
 class PyBT(Daemon):
     def run(self):
         try:
-            java_callback = javaCallback()
-            java_connector = javaConnector(java_callback)
-            logger.info("Begin init py4j")
+            java_connector = javaConnector()
             gateway = JavaGateway(
                 callback_server_parameters=CallbackServerParameters(),
                 python_server_entry_point=java_connector)
-            #gateway.entry_point.py_adapter_callback.ReceiveData("one","two","three")
-            logger.info("py4j init ok")
+            java_connector.set_entrypoint(gateway, gateway.entry_point)
             while True:
                 logger.info("Tick!")
-                time.sleep(100)
+                time.sleep(10)
+
         except Exception as ex:
             logger.critical(f"[BTPY][FAIL] {ex}")
             self.stop()
